@@ -51,7 +51,9 @@ class Checkers:
 
             print(f"Selected {piece_choice} at row {select_row}, col {select_col}")
 
-            direction = input(f"Move {piece_choice}: Left or Right? (L/R) ").strip().upper()
+            direction = (
+                input(f"Move {piece_choice}: Left or Right? (L/R) ").strip().upper()
+            )
             if direction == "L":
                 print(f"Moving {piece_choice} {direction}")
                 break
@@ -62,8 +64,27 @@ class Checkers:
             continue
         return piece_choice, select_row, select_col, direction
 
-    # def make_move(self):
-        
+    def make_move(self, piece_choice, select_row, select_col, direction):
+        if direction == "L":
+            if select_row - 1 < 0 or select_col - 1 < 0:
+                print("INVALID MOVE. Try again")
+                return
+            if self.board[select_row - 1][select_col - 1] != "_":
+                print("INVALID MOVE. Try again")
+                return
+            else:
+                self.board[select_row][select_col] = "_"
+                self.board[select_row - 1][select_col - 1] = piece_choice
+        if direction == "R":
+            if select_col + 1 > 7 or select_row - 1 < 0:
+                print("INVALID MOVE. Try again")
+                return
+            if self.board[select_row - 1][select_col + 1] != "_":
+                print("INVALID MOVE. Try again")
+                return
+            else:
+                self.board[select_row][select_col] = "_"
+                self.board[select_row - 1][select_col + 1] = piece_choice
 
     def render(self):
         for i in range(len(self.board)):
@@ -73,10 +94,7 @@ class Checkers:
         while True:
             self.render()
             piece_choice, select_row, select_col, direction = self.process_input()
-            print(piece_choice)
-            print(select_row)
-            print(select_col)
-            print(direction)
+            self.make_move(piece_choice, select_row, select_col, direction)
         print("GG")
 
 
