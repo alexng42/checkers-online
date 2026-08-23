@@ -50,7 +50,20 @@ class Checkers:
             select_row, select_col = coords
 
             print(f"Selected {piece_choice} at row {select_row}, col {select_col}")
-            return piece_choice, select_row, select_col
+
+            direction = input(f"Move {piece_choice}: Left or Right? (L/R) ").strip().upper()
+            if direction == "L":
+                print(f"Moving {piece_choice} {direction}")
+                break
+            if direction == "R":
+                print(f"Moving {piece_choice} {direction}")
+                break
+            print("INVALID DIRECTION. Try again.")
+            continue
+        return piece_choice, select_row, select_col, direction
+
+    # def make_move(self):
+        
 
     def render(self):
         for i in range(len(self.board)):
@@ -59,7 +72,11 @@ class Checkers:
     def play(self):
         while True:
             self.render()
-            self.process_input()
+            piece_choice, select_row, select_col, direction = self.process_input()
+            print(piece_choice)
+            print(select_row)
+            print(select_col)
+            print(direction)
         print("GG")
 
 
