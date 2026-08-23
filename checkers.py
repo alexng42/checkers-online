@@ -65,26 +65,50 @@ class Checkers:
         return piece_choice, select_row, select_col, direction
 
     def make_move(self, piece_choice, select_row, select_col, direction):
-        if direction == "L":
-            if select_row - 1 < 0 or select_col - 1 < 0:
-                print("INVALID MOVE. Try again")
-                return
-            if self.board[select_row - 1][select_col - 1] != "_":
-                print("INVALID MOVE. Try again")
-                return
-            else:
-                self.board[select_row][select_col] = "_"
-                self.board[select_row - 1][select_col - 1] = piece_choice
-        if direction == "R":
-            if select_col + 1 > 7 or select_row - 1 < 0:
-                print("INVALID MOVE. Try again")
-                return
-            if self.board[select_row - 1][select_col + 1] != "_":
-                print("INVALID MOVE. Try again")
-                return
-            else:
-                self.board[select_row][select_col] = "_"
-                self.board[select_row - 1][select_col + 1] = piece_choice
+        if piece_choice.startswith("B"):
+            if direction == "L":
+                if select_row - 1 < 0 or select_col - 1 < 0:
+                    print("INVALID MOVE. Try again")
+                    return
+                if self.board[select_row - 1][select_col - 1] != "_":
+                    print("INVALID MOVE. Try again")
+                    return
+                else:
+                    self.board[select_row][select_col] = "_"
+                    self.board[select_row - 1][select_col - 1] = piece_choice
+            if direction == "R":
+                if select_col + 1 > 7 or select_row - 1 < 0:
+                    print("INVALID MOVE. Try again")
+                    return
+                if self.board[select_row - 1][select_col + 1] != "_":
+                    print("INVALID MOVE. Try again")
+                    return
+                else:
+                    self.board[select_row][select_col] = "_"
+                    self.board[select_row - 1][select_col + 1] = piece_choice
+            self.current_turn = "R"
+        else:
+            if direction == "L":
+                if select_row + 1 < 0 or select_col - 1 < 0:
+                    print("INVALID MOVE. Try again")
+                    return
+                if self.board[select_row + 1][select_col - 1] != "_":
+                    print("INVALID MOVE. Try again")
+                    return
+                else:
+                    self.board[select_row][select_col] = "_"
+                    self.board[select_row + 1][select_col - 1] = piece_choice
+            if direction == "R":
+                if select_col + 1 > 7 or select_row + 1 < 0:
+                    print("INVALID MOVE. Try again")
+                    return
+                if self.board[select_row + 1][select_col + 1] != "_":
+                    print("INVALID MOVE. Try again")
+                    return
+                else:
+                    self.board[select_row][select_col] = "_"
+                    self.board[select_row + 1][select_col + 1] = piece_choice
+            self.current_turn = "B"
 
     def render(self):
         for i in range(len(self.board)):
