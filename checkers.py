@@ -1,5 +1,8 @@
 """
-Game Logic:
+todo:
+- forced jumps
+- king
+- game over
 
 """
 
@@ -28,6 +31,25 @@ class Checkers:
                     return r_idx, c_idx
         return None
 
+    def get_available_moves(self, piece_choice, select_row, select_col):
+            valid_moves = []
+            # check for forced jumps
+            if piece_choice.startswith("B"):
+                # left forced jump
+                if self.board[select_row - 1][select_col - 1].startswith("R") and self.board[select_row - 2][select_col - 2] == "_":
+                    valid_moves.append("JL")
+                # right forced jump
+                if self.board[select_row - 1][select_col + 1].startswith("R") and self.board[select_row - 2][select_col + 2] == "_":
+                    valid_moves.append("JR")
+                if not valid_moves:
+                    # left
+                    if self.board[select_row - 1][select_col - 1] == "_":
+                        valid_moves.append("L")
+                    # right
+                    if self.board[select_row - 1][select_col + 1] == "_":
+                        valid_moves.append("R")
+                return valid_moves
+
     def process_input(self):
         print(f"{self.current_turn}'s Turn")
 
@@ -51,8 +73,10 @@ class Checkers:
 
             print(f"Selected {piece_choice} at row {select_row}, col {select_col}")
 
+            piece_moves = self.get_available_moves(piece_choice, select_row, select_col)
+
             direction = (
-                input(f"Move {piece_choice}: Left or Right? (L/R) ").strip().upper()
+                input(f"Moving {piece_choice}. Choose an option: {piece_moves} ").strip().upper()
             )
             if direction == "L":
                 print(f"Moving {piece_choice} {direction}")
@@ -63,6 +87,7 @@ class Checkers:
             print("INVALID DIRECTION. Try again.")
             continue
         return piece_choice, select_row, select_col, direction
+        
 
     def make_move(self, piece_choice, select_row, select_col, direction):
         if piece_choice.startswith("B"):
