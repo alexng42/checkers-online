@@ -49,6 +49,21 @@ class Checkers:
                     if self.board[select_row - 1][select_col + 1] == "_":
                         valid_moves.append("R")
                 return valid_moves
+            else:
+                # left forced jump
+                if self.board[select_row + 1][select_col - 1].startswith("B") and self.board[select_row + 2][select_col - 2] == "_":
+                    valid_moves.append("JL")
+                # right forced jump
+                if self.board[select_row + 1][select_col + 1].startswith("B") and self.board[select_row + 2][select_col + 2] == "_":
+                    valid_moves.append("JR")
+                if not valid_moves:
+                    # left
+                    if self.board[select_row + 1][select_col - 1] == "_":
+                        valid_moves.append("L")
+                    # right
+                    if self.board[select_row + 1][select_col + 1] == "_":
+                        valid_moves.append("R")
+                return valid_moves
 
     def process_input(self):
         print(f"{self.current_turn}'s Turn")
@@ -78,61 +93,45 @@ class Checkers:
             direction = (
                 input(f"Moving {piece_choice}. Choose an option: {piece_moves} ").strip().upper()
             )
-            if direction == "L":
-                print(f"Moving {piece_choice} {direction}")
-                break
-            if direction == "R":
-                print(f"Moving {piece_choice} {direction}")
-                break
-            print("INVALID DIRECTION. Try again.")
-            continue
-        return piece_choice, select_row, select_col, direction
+            return piece_choice, select_row, select_col, direction, piece_moves
         
 
-    def make_move(self, piece_choice, select_row, select_col, direction):
+    def make_move(self, piece_choice, select_row, select_col, direction, piece_moves):
+        if not piece_moves:
+            print(f"{piece_choice} has no valid moves.")
+            return
         if piece_choice.startswith("B"):
-            if direction == "L":
-                if select_row - 1 < 0 or select_col - 1 < 0:
-                    print("INVALID MOVE. Try again")
-                    return
-                if self.board[select_row - 1][select_col - 1] != "_":
-                    print("INVALID MOVE. Try again")
-                    return
-                else:
-                    self.board[select_row][select_col] = "_"
-                    self.board[select_row - 1][select_col - 1] = piece_choice
-            if direction == "R":
-                if select_col + 1 > 7 or select_row - 1 < 0:
-                    print("INVALID MOVE. Try again")
-                    return
-                if self.board[select_row - 1][select_col + 1] != "_":
-                    print("INVALID MOVE. Try again")
-                    return
-                else:
-                    self.board[select_row][select_col] = "_"
-                    self.board[select_row - 1][select_col + 1] = piece_choice
+            if "JL" in piece_moves and direction == "JL":
+                self.board[select_row][select_col] = "_"
+                self.board[select_row - 1][select_col - 1] = "_"
+                self.board[select_row - 2][select_col - 2] = piece_choice
+            if "JR" in piece_moves and direction == "JR":
+                self.board[select_row][select_col] = "_"
+                self.board[select_row - 1][select_col + 1] = "_"
+                self.board[select_row - 2][select_col + 2] = piece_choice
+
+            if "L" in piece_moves and direction == "L":
+                self.board[select_row][select_col] = "_"
+                self.board[select_row - 1][select_col - 1] = piece_choice
+            if "R" in piece_moves and direction == "R":
+                self.board[select_row][select_col] = "_"
+                self.board[select_row - 1][select_col + 1] = piece_choice
             self.current_turn = "R"
         else:
-            if direction == "L":
-                if select_row + 1 < 0 or select_col - 1 < 0:
-                    print("INVALID MOVE. Try again")
-                    return
-                if self.board[select_row + 1][select_col - 1] != "_":
-                    print("INVALID MOVE. Try again")
-                    return
-                else:
-                    self.board[select_row][select_col] = "_"
-                    self.board[select_row + 1][select_col - 1] = piece_choice
-            if direction == "R":
-                if select_col + 1 > 7 or select_row + 1 < 0:
-                    print("INVALID MOVE. Try again")
-                    return
-                if self.board[select_row + 1][select_col + 1] != "_":
-                    print("INVALID MOVE. Try again")
-                    return
-                else:
-                    self.board[select_row][select_col] = "_"
-                    self.board[select_row + 1][select_col + 1] = piece_choice
+            if "JL" in piece_moves and direction == "JL":
+                self.board[select_row][select_col] = "_"
+                self.board[select_row + 1][select_col - 1] = "_"
+                self.board[select_row + 2][select_col - 2] = piece_choice
+            if "JR" in piece_moves and direction == "JR":
+                self.board[select_row][select_col] = "_"
+                self.board[select_row + 1][select_col + 1] = "_"
+                self.board[select_row + 2][select_col + 2] = piece_choice
+            if "L" in piece_moves and direction == "L":
+                self.board[select_row][select_col] = "_"
+                self.board[select_row + 1][select_col - 1] = piece_choice
+            if "R" in piece_moves and direction == "R":
+                self.board[select_row][select_col] = "_"
+                self.board[select_row + 1][select_col + 1] = piece_choice
             self.current_turn = "B"
 
     def render(self):
@@ -142,8 +141,8 @@ class Checkers:
     def play(self):
         while True:
             self.render()
-            piece_choice, select_row, select_col, direction = self.process_input()
-            self.make_move(piece_choice, select_row, select_col, direction)
+            piece_choice, select_row, select_col, direction, piece_moves = self.process_input()
+            self.make_move(piece_choice, select_row, select_col, direction, piece_moves)
         print("GG")
 
 
