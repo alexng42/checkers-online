@@ -1,8 +1,5 @@
 """
 todo:
-- forced jumps
-    check "nearby" pieces after most recent move for forced jumps
-
 - king
 - game over
 
