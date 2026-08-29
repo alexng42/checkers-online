@@ -76,6 +76,13 @@ class Checkers:
                         return True
         return False
 
+    def extra_forced_jumps(self, piece):
+        coords = self.find_piece(piece)
+        select_row, select_col = coords
+        piece_moves = self.get_available_moves(piece, select_row, select_col)
+        return "JL" not in piece_moves and "JR" not in piece_moves
+
+
     def process_input(self):
         print(f"{self.current_turn}'s Turn")
 
@@ -105,6 +112,9 @@ class Checkers:
                 direction = (
                     input(f"Moving {piece_choice}. Choose an option: {piece_moves} ").strip().upper()
                 )
+                if direction not in piece_moves:
+                    print("Bad input. Try again.")
+                    continue
                 return piece_choice, select_row, select_col, direction, piece_moves
             else:
                 piece_choice = (
@@ -135,6 +145,9 @@ class Checkers:
                 direction = (
                     input(f"Moving {piece_choice}. Choose an option: {piece_moves} ").strip().upper()
                 )
+                if direction not in piece_moves:
+                    print("Bad input. Try again.")
+                    continue
                 return piece_choice, select_row, select_col, direction, piece_moves
         
 
@@ -147,11 +160,33 @@ class Checkers:
                 self.board[select_row][select_col] = "_"
                 self.board[select_row - 1][select_col - 1] = "_"
                 self.board[select_row - 2][select_col - 2] = piece_choice
+                # check for another forced jump with this piece
+                if not self.extra_forced_jumps(piece_choice):
+                    coords = self.find_piece(piece_choice)
+                    select_row, select_col = coords
+                    piece_moves = self.get_available_moves(piece_choice, select_row, select_col)
+                    if "L" in piece_moves:
+                        piece_moves.remove("L")
+                    if "R" in piece_moves:
+                        piece_moves.remove("R")
+                    direction = (input(f"Moving {piece_choice}. Choose an option: {piece_moves} ").strip().upper())
+                    self.make_move(piece_choice, select_row, select_col, direction, piece_moves)
+
             if "JR" in piece_moves and direction == "JR":
                 self.board[select_row][select_col] = "_"
                 self.board[select_row - 1][select_col + 1] = "_"
                 self.board[select_row - 2][select_col + 2] = piece_choice
-
+                if not self.extra_forced_jumps(piece_choice):
+                    coords = self.find_piece(piece_choice)
+                    select_row, select_col = coords
+                    piece_moves = self.get_available_moves(piece_choice, select_row, select_col)
+                    if "L" in piece_moves:
+                        piece_moves.remove("L")
+                    if "R" in piece_moves:
+                        piece_moves.remove("R")
+                    direction = (input(f"Moving {piece_choice}. Choose an option: {piece_moves} ").strip().upper())
+                    self.make_move(piece_choice, select_row, select_col, direction, piece_moves)
+                
             if "L" in piece_moves and direction == "L":
                 self.board[select_row][select_col] = "_"
                 self.board[select_row - 1][select_col - 1] = piece_choice
@@ -164,10 +199,30 @@ class Checkers:
                 self.board[select_row][select_col] = "_"
                 self.board[select_row + 1][select_col - 1] = "_"
                 self.board[select_row + 2][select_col - 2] = piece_choice
+                if not self.extra_forced_jumps(piece_choice):
+                    coords = self.find_piece(piece_choice)
+                    select_row, select_col = coords
+                    piece_moves = self.get_available_moves(piece_choice, select_row, select_col)
+                    if "L" in piece_moves:
+                        piece_moves.remove("L")
+                    if "R" in piece_moves:
+                        piece_moves.remove("R")
+                    direction = (input(f"Moving {piece_choice}. Choose an option: {piece_moves} ").strip().upper())
+                    self.make_move(piece_choice, select_row, select_col, direction, piece_moves)
             if "JR" in piece_moves and direction == "JR":
                 self.board[select_row][select_col] = "_"
                 self.board[select_row + 1][select_col + 1] = "_"
                 self.board[select_row + 2][select_col + 2] = piece_choice
+                if not self.extra_forced_jumps(piece_choice):
+                    coords = self.find_piece(piece_choice)
+                    select_row, select_col = coords
+                    piece_moves = self.get_available_moves(piece_choice, select_row, select_col)
+                    if "L" in piece_moves:
+                        piece_moves.remove("L")
+                    if "R" in piece_moves:
+                        piece_moves.remove("R")
+                    direction = (input(f"Moving {piece_choice}. Choose an option: {piece_moves} ").strip().upper())
+                    self.make_move(piece_choice, select_row, select_col, direction, piece_moves)
             if "L" in piece_moves and direction == "L":
                 self.board[select_row][select_col] = "_"
                 self.board[select_row + 1][select_col - 1] = piece_choice
