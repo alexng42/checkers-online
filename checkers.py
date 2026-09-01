@@ -33,8 +33,6 @@ class Checkers:
     def get_available_moves(self, piece_choice, select_row, select_col):
             valid_moves = []
 
-            # fix bounds
-
             # check for forced jumps
             if piece_choice.startswith("B"):
                 # left forced jump
@@ -81,7 +79,6 @@ class Checkers:
         select_row, select_col = coords
         piece_moves = self.get_available_moves(piece, select_row, select_col)
         return "JL" not in piece_moves and "JR" not in piece_moves
-
 
     def process_input(self):
         print(f"{self.current_turn}'s Turn")
@@ -189,10 +186,18 @@ class Checkers:
                 
             if "L" in piece_moves and direction == "L":
                 self.board[select_row][select_col] = "_"
-                self.board[select_row - 1][select_col - 1] = piece_choice
+                if select_row - 1 == 0:
+                    king_piece = f"K{piece_choice}"
+                    self.board[select_row - 1][select_col - 1] = king_piece
+                else:
+                    self.board[select_row - 1][select_col - 1] = piece_choice
             if "R" in piece_moves and direction == "R":
                 self.board[select_row][select_col] = "_"
-                self.board[select_row - 1][select_col + 1] = piece_choice
+                if select_row - 1 == 0:
+                    king_piece = f"K{piece_choice}"
+                    self.board[select_row - 1][select_col + 1] = king_piece
+                else:
+                    self.board[select_row - 1][select_col + 1] = piece_choice
             self.current_turn = "R"
         else:
             if "JL" in piece_moves and direction == "JL":
